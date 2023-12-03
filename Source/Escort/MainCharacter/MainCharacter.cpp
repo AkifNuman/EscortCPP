@@ -119,6 +119,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("Run", this, &AMainCharacter::Run);
 	PlayerInputComponent->BindAxis("Crouch", this, &AMainCharacter::CharCrouch);
+	PlayerInputComponent->BindAxis("Aim", this, &AMainCharacter::Aim);
 }
 
 void AMainCharacter::PostInitializeComponents()
@@ -159,6 +160,11 @@ void AMainCharacter::CharCrouch(float Value)
 
 void AMainCharacter::Run(float Value)
 {
+	ServerRun(Value);
+}
+
+void AMainCharacter::ServerRun_Implementation(float Value)
+{
 	if ((Value != NULL) && (Value > 0))
 	{
 		GetCharacterMovement()->MaxWalkSpeed = 550.f;
@@ -182,6 +188,26 @@ void AMainCharacter::Equip()
 			ServerEquip();
 		}
 	}
+}
+
+void AMainCharacter::Aim(float Value)
+{
+	if (Value)
+	{
+		if (Combat)
+			Combat->SetAiming(true);
+	}
+	else
+	{
+		if (Combat)
+			Combat->SetAiming(false);
+	}
+
+}
+
+bool AMainCharacter::IsAim()
+{
+	return (Combat && Combat->bAiming);
 }
 
 void AMainCharacter::ServerEquip_Implementation()
@@ -213,8 +239,6 @@ void AMainCharacter::OnRep_OverlappingWeapon(AMainWeapon* LastWeapon)
 {
 
 }
-
-
 
 void AMainCharacter::SaveGame()
 {

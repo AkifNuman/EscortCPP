@@ -28,6 +28,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void Equip();
 
+	UFUNCTION(BlueprintCallable)
+	void Aim(float Value);
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -41,6 +44,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool HasWep();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsAim();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool Crouched;
@@ -80,6 +86,9 @@ private:
 
 	UFUNCTION(Server, Reliable)
 	void ServerEquip();
+
+	UFUNCTION(Server, Reliable)
+	void ServerRun(float Value);
 
 	bool CharHasHair;
 	bool IsMale;
