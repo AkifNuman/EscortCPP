@@ -28,6 +28,14 @@ protected:
 		bool bFromSweep,
 		const FHitResult& SweepResult
 	);
+
+	UFUNCTION()
+	void OnSphereEndOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex
+	);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -35,7 +43,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DestroyActor();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon Properties")
+	UFUNCTION()
+	void SetWeapon(USkeletalMeshComponent* WepSetMesh);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Properties")
 	USkeletalMeshComponent* WeaponMesh;
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")

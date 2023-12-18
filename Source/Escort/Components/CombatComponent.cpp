@@ -38,7 +38,8 @@ void UCombatComponent::OnRep_EquippedWeapon()
 
 void UCombatComponent::EquipWeapon(AMainWeapon* WeaponToEquip)
 {
-	if (Character == nullptr || WeaponToEquip == nullptr) return;
+	if (Character == nullptr || WeaponToEquip == nullptr)
+		return;
 	
 	EquippedWeapon = WeaponToEquip;
 	const USkeletalMeshSocket* HandSocket = Character->GetMesh()->GetSocketByName(FName("RightHandSocket"));
@@ -51,8 +52,8 @@ void UCombatComponent::EquipWeapon(AMainWeapon* WeaponToEquip)
 	FString FormattedText = FString::Printf(TEXT("%i"), printmag);
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FormattedText);
 	EquippedWeapon->SetOwner(Character);
-	Character->GetCharacterMovement()->bOrientRotationToMovement = false;
-	Character->bUseControllerRotationYaw = true;
+	//Character->GetCharacterMovement()->bOrientRotationToMovement = false;
+	//Character->bUseControllerRotationYaw = true;
 
 }
 

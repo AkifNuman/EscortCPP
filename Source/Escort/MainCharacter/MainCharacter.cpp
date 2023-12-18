@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "Escort/Components/CombatComponent.h"
+#include "stdio.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -29,7 +30,7 @@ AMainCharacter::AMainCharacter()
 		GetMesh()->SetSkeletalMeshAsset(CharMesh);
 	}
 
-	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -88.f));
+	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -88.784294f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 
 	CharHair = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CharHair"));
@@ -52,6 +53,8 @@ AMainCharacter::AMainCharacter()
 
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	Combat->SetIsReplicated(true);
+
+	SaveGameInstance = Cast<UCharacterItemData>(UGameplayStatics::CreateSaveGameObject(UCharacterItemData::StaticClass()));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
@@ -88,10 +91,7 @@ void AMainCharacter::BeginPlay()
 		{
 			CharHairMale->SetVisibility(true);
 		}
-		if (WeaponClass)
-		{
-			Equip();
-		}
+		Equip();
 	}
 }
 
@@ -175,9 +175,16 @@ void AMainCharacter::ServerRun_Implementation(float Value)
 	}
 }
 
+void AMainCharacter::EquipStart(AMainWeapon* StartWeaponClass)
+{
+	WeaponClass = StartWeaponClass;
+
+	
+}
+
 void AMainCharacter::Equip()
 {
-	if (Combat)
+	if (Combat && InCollision)
 	{
 		if (HasAuthority())
 		{
@@ -192,16 +199,6 @@ void AMainCharacter::Equip()
 
 void AMainCharacter::Aim(float Value)
 {
-	if (Value)
-	{
-		if (Combat)
-			Combat->SetAiming(true);
-	}
-	else
-	{
-		if (Combat)
-			Combat->SetAiming(false);
-	}
 
 }
 
@@ -221,6 +218,7 @@ void AMainCharacter::ServerEquip_Implementation()
 void AMainCharacter::SetOverlappingWeapon(AMainWeapon* Weapon)
 {
 	WeaponClass = Weapon;
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("merhaba dunya")));
 }
 
 void AMainCharacter::SetCharacterData(USkeletalMesh* NewMesh, bool HasCharHair, bool CharHairIsMale)
@@ -242,7 +240,8 @@ void AMainCharacter::OnRep_OverlappingWeapon(AMainWeapon* LastWeapon)
 
 void AMainCharacter::SaveGame()
 {
-	UCharacterItemData* SaveGameInstance = Cast<UCharacterItemData>(UGameplayStatics::CreateSaveGameObject(UCharacterItemData::StaticClass()));
+	SaveGameInstance = Cast<UCharacterItemData>(UGameplayStatics::CreateSaveGameObject(UCharacterItemData::StaticClass()));
+
 	SaveGameInstance->CharMesh = CharMesh;
 	SaveGameInstance->CharHasHair = CharHasHair;
 	SaveGameInstance->IsMale = IsMale;
@@ -252,7 +251,7 @@ void AMainCharacter::SaveGame()
 
 void AMainCharacter::LoadGame()
 {
-	UCharacterItemData* SaveGameInstance = Cast<UCharacterItemData>(UGameplayStatics::CreateSaveGameObject(UCharacterItemData::StaticClass()));
+	SaveGameInstance = Cast<UCharacterItemData>(UGameplayStatics::CreateSaveGameObject(UCharacterItemData::StaticClass()));
 
 	SaveGameInstance = Cast<UCharacterItemData>(UGameplayStatics::LoadGameFromSlot("Slot0", 0));
 	if (SaveGameInstance)
