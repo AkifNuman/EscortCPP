@@ -26,6 +26,9 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 	UFUNCTION(BlueprintCallable)
+	void Equip();
+
+	UFUNCTION(BlueprintCallable)
 	void Aim(float Value);
 
 public:	
@@ -48,13 +51,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool Crouched;
 
-	bool InCollision;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	USkeletalMesh* CharMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	UCharacterItemData* SaveGameInstance;
 
 	UFUNCTION(BlueprintCallable)
 	void SetCharacterData(USkeletalMesh* NewMesh, bool HasCharHair, bool CharHairIsMale);
@@ -69,21 +67,13 @@ public:
 
 	void Run(float Value);
 
-
-	UFUNCTION(BlueprintCallable)
-	void Equip();
-
-	UFUNCTION()
-	void EquipStart(AMainWeapon* StartWeaponClass);
-
 	void SetOverlappingWeapon(AMainWeapon* Weapon);
-
-	UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_OverlappingWeapon)
+private:
+	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
 	class AMainWeapon* WeaponClass;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	class UCombatComponent* Combat;
-private:
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* CharHair;

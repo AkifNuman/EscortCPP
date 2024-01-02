@@ -43,9 +43,7 @@ void AMainWeapon::BeginPlay()
 		AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 		AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AMainWeapon::OnSphereOverlap);
-		AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AMainWeapon::OnSphereEndOverlap);
 	}
-
 }
 
 // Called every frame
@@ -62,30 +60,12 @@ void AMainWeapon::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
 	if (MainCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, TEXT("begin playy"));
 		MainCharacter->SetOverlappingWeapon(this);
 	}
-	MainCharacter->InCollision = true;
-}
 
-void AMainWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	Super::BeginPlay();
-	
-	AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
-	if (MainCharacter)
-	{
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, TEXT("begin playy"));
-	}
-	MainCharacter->InCollision = false;
 }
 
 void AMainWeapon::DestroyActor()
 {
 	Destroy();
-}
-
-void AMainWeapon::SetWeapon(USkeletalMeshComponent* WepSetMesh)
-{
-	WeaponMesh = WepSetMesh;
 }

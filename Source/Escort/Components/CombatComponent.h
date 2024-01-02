@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ESCORT_API UCombatComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -17,7 +17,7 @@ public:
 	friend class AMainCharacter;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UFUNCTION(BlueprintCallable)
+
 	void EquipWeapon(class AMainWeapon* WeaponToEquip);
 protected:
 	virtual void BeginPlay() override;

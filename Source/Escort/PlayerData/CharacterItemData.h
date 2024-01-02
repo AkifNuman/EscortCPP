@@ -29,9 +29,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool IsMale;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	AMainWeapon* Weapon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USkeletalMesh* WeaponMesh;
 };
